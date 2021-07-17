@@ -20,6 +20,9 @@ let foodY = 5;
 function drawGame() {
     clearScreen();
     changeSnakePosition();
+
+
+    changeFoodPosition();
     drawFood();
     drawSnake();
     setTimeout(drawGame , 1000/speed)
@@ -36,15 +39,23 @@ function drawSnake() {
     ctx.fillRect(headX * tileCount , headY * tileCount , tileSize , tileSize)
 }
 
-function drawFood() {
-    ctx.fillStyle = 'green';
-    ctx.fillRect(foodX , foodY , tileSize , tileSize);
-    
-}
 
 function changeSnakePosition() {
     headX = headX + xVelocity;
     headY = headY + yVelocity;
+}
+
+function drawFood() {
+    ctx.fillStyle = 'green';
+    ctx.fillRect(foodX * tileCount , foodY * tileCount , tileSize , tileSize);
+    
+}
+
+function changeFoodPosition() {
+    if (foodX == headX && foodY == headY ) {
+        foodX = Math.floor(Math.random() * tileCount);
+        foodY = Math.floor(Math.random() * tileCount);
+    }
 }
 
 
