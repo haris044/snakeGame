@@ -3,11 +3,20 @@ const ctx =  canvas.getContext('2d');
 
 let speed = 7;
 
+class SnakePart{
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+    }
+}
+
 
 let tileCount = 20;
 let tileSize = canvas.width / tileCount - 2;
 let headX = 10;
 let headY = 10;
+const SnakeParts = [];
+let tailLength = 0;
 
 let xVelocity= 0;
 let yVelocity= 0;
@@ -18,15 +27,36 @@ let foodY = 5;
 
 // game loop
 function drawGame() {
-    clearScreen();
     changeSnakePosition();
-
-
+    let result = gameIsOver();
+    if (result) {
+        return;
+    }
+    clearScreen();
     changeFoodPosition();
     drawFood();
     drawSnake();
     setTimeout(drawGame , 1000/speed)
     
+}
+
+function gameIsOver() {
+    let gameOver = false;
+    if (headX < 0 ) {
+        gameOver = true;
+    }
+    else if (headX === tileCount ) {
+        gameOver = true;
+    }
+    else if(headY < 0){
+        gameOver = true;
+    }
+    else if (headY === tileCount ) {
+        gameOver = true;
+    }
+
+    
+    return gameOver;
 }
 
 function clearScreen() {
@@ -35,8 +65,21 @@ function clearScreen() {
 }
 
 function drawSnake() {
+    
+
+    ctx.fillStyle='white';
+    for(let i =0; i<SnakeParts.length; i++){
+        let part = SnakeParts[i];
+        ctx.fillRect(part.x *tileCount, part.y * tileCount , tileSize , tileSize)
+    }
+    SnakeParts.push(new SnakePart(headX, headY));
+    if (SnakeParts.length>tailLength){
+        SnakeParts.shift();
+
+        
+    }
     ctx.fillStyle = 'white';
-    ctx.fillRect(headX * tileCount , headY * tileCount , tileSize , tileSize)
+    ctx.fillRect(headX * tileCount , headY * tileCount , tileSize , tileSize) 
 }
 
 
@@ -55,6 +98,7 @@ function changeFoodPosition() {
     if (foodX == headX && foodY == headY ) {
         foodX = Math.floor(Math.random() * tileCount);
         foodY = Math.floor(Math.random() * tileCount);
+        tailLength++;
     }
 }
 
